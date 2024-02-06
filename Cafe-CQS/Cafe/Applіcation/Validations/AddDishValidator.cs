@@ -1,0 +1,32 @@
+﻿using Cafe.Domain.DTOs;
+using FluentValidation;
+
+namespace Cafe.Applіcation.Validations;
+
+public class AddDishValidator : AbstractValidator<AddDishRequest>
+{
+    public AddDishValidator()
+    {
+        RuleFor(x => x.Title)
+            .NotNull()
+            .NotEmpty();
+
+        RuleFor(x => x.Description)
+            .NotNull()
+            .NotEmpty();
+
+        RuleFor(x => x.Price)
+            .NotNull()
+            .NotEmpty();
+
+        RuleFor(x => x.ImageUrl)
+            .NotEmpty()
+            .NotNull()
+            .Must(BeAValidUrl).WithMessage("Image URL must be a valid URL.");
+    }
+
+    private bool BeAValidUrl(string url)
+    {
+        return string.IsNullOrWhiteSpace(url) || Uri.TryCreate(url, UriKind.Absolute, out _);
+    }
+}
